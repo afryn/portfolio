@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afreen's Laravel Portfolio</title>
+<meta name="description" content="Afreen, PHP / Laravel developer in Delhi. Builds multi-panel production platforms: Redis, RAG search, WhatsApp Business API, FCM, SMS, payments, CI/CD.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Dark-first palette */
+  :root {
+    --bg: #0B0E1A;
+    --bg-2: #0F1324;
+    --card: #141930;
+    --card-2: #1A2040;
+    --line: #242B4A;
+    --line-2: #323A63;
+    --ink: #EEF0F8;
+    --muted: #9CA3C2;
+    --faint: #6B7297;
+    --accent: #8B97FF;
+    --accent-2: #B6BEFF;
+    --accent-ink: #0B0E1A;
+    --warm: #FFB547;
+    --ok: #5FD4A0;
+    --glow-a: rgba(110, 124, 255, .28);
+    --glow-b: rgba(255, 181, 71, .12);
+    --grid: rgba(255, 255, 255, .035);
+    --shadow: 0 30px 80px -30px rgba(0, 0, 0, .7);
+    --nav-bg: rgba(11, 14, 26, .72);
+    --term-bg: #080A14;
+    --term-ink: #D9DDEE;
+    --term-dim: #6E7596;
+    --term-key: #9AA6FF;
+    --term-str: #FFC56E;
+
+    --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --f-body: "Onest", "Segoe UI", system-ui, sans-serif;
+    --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    --r: 18px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F5F6FB;
+      --bg-2: #ECEEF7;
+      --card: #FFFFFF;
+      --card-2: #F2F3FA;
+      --line: #E1E4F0;
+      --line-2: #CDD2E6;
+      --ink: #0F1430;
+      --muted: #545B7A;
+      --faint: #8389A6;
+      --accent: #3D4BE0;
+      --accent-2: #2A36B8;
+      --accent-ink: #FFFFFF;
+      --warm: #C47A00;
+      --ok: #178A58;
+      --glow-a: rgba(61, 75, 224, .16);
+      --glow-b: rgba(255, 170, 40, .14);
+      --grid: rgba(15, 20, 48, .045);
+      --shadow: 0 30px 70px -35px rgba(30, 40, 110, .35);
+      --nav-bg: rgba(245, 246, 251, .78);
+      --term-bg: #10142A;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F5F6FB;
+    --bg-2: #ECEEF7;
+    --card: #FFFFFF;
+    --card-2: #F2F3FA;
+    --line: #E1E4F0;
+    --line-2: #CDD2E6;
+    --ink: #0F1430;
+    --muted: #545B7A;
+    --faint: #8389A6;
+    --accent: #3D4BE0;
+    --accent-2: #2A36B8;
+    --accent-ink: #FFFFFF;
+    --warm: #C47A00;
+    --ok: #178A58;
+    --glow-a: rgba(61, 75, 224, .16);
+    --glow-b: rgba(255, 170, 40, .14);
+    --grid: rgba(15, 20, 48, .045);
+    --shadow: 0 30px 70px -35px rgba(30, 40, 110, .35);
+    --nav-bg: rgba(245, 246, 251, .78);
+    --term-bg: #10142A;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    padding-inline: clamp(16px, 4vw, 48px);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(900px 520px at 85% -8%, var(--glow-a), transparent 60%),
+      radial-gradient(700px 420px at -10% 30%, var(--glow-b), transparent 60%),
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 56px 56px,
+      var(--bg);
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  .wrap { max-width: 1180px; margin-inline: auto; }
+  svg.i { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- nav ---------- */
+  .nav {
+    position: sticky; top: 14px; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 14px; padding: 10px 10px 10px 18px;
+    background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line); border-radius: 999px;
+  }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--f-display); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; }
+  .logo b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), var(--warm)); color: #0B0E1A; font-size: 0.95rem; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a { text-decoration: none; font-size: 0.9rem; color: var(--muted); padding: 8px 14px; border-radius: 999px; transition: color .2s, background-color .2s; }
+  .nav-links a:hover { color: var(--ink); background: var(--card-2); }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .theme-btn {
+    display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--card-2); color: var(--ink); border: 1px solid var(--line); cursor: pointer;
+  }
+  .theme-btn svg.i { width: 18px; height: 18px; }
+  .theme-btn .sun { display: none; }
+  :root[data-theme="light"] .theme-btn .sun { display: block; }
+  :root[data-theme="light"] .theme-btn .moon { display: none; }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .theme-btn .sun { display: block; }
+    :root:not([data-theme="dark"]) .theme-btn .moon { display: none; }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: var(--f-body); font-weight: 600; font-size: 0.95rem;
+    padding: 13px 22px; border-radius: 999px; text-decoration: none; border: 1px solid transparent;
+    transition: transform .2s, background-color .2s, border-color .2s, box-shadow .2s;
+  }
+  .btn svg.i { width: 18px; height: 18px; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 10px 30px -10px var(--accent); }
+  .btn-ghost { background: var(--card); border-color: var(--line-2); color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--accent); }
+  .btn-sm { padding: 9px 16px; font-size: 0.875rem; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(40px, 5vw, 72px); align-items: center;
+    padding-block: clamp(56px, 8vw, 104px) clamp(48px, 7vw, 88px);
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 14px 6px 8px; border-radius: 999px;
+    background: var(--card); border: 1px solid var(--line);
+    font-size: 0.85rem; color: var(--muted);
+  }
+  .badge .dot { position: relative; width: 22px; height: 22px; border-radius: 50%; background: color-mix(in srgb, var(--ok) 18%, transparent); display: grid; place-items: center; }
+  .badge .dot::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--ok) 0%, transparent), 0 0 0 0 var(--ok); transform: scale(.85); } }
+  h1 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: clamp(2.6rem, 6.2vw, 4.9rem); line-height: 1.02; letter-spacing: -0.04em;
+    margin: 22px 0 0; text-wrap: balance;
+  }
+  h1 .hl {
+    background: linear-gradient(100deg, var(--accent) 10%, var(--warm) 95%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { font-size: 1.15rem; color: var(--muted); max-width: 36em; margin: 22px 0 32px; text-wrap: pretty; }
+  .hero-sub strong { color: var(--ink); font-weight: 600; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 44px; border-top: 1px solid var(--line); }
+  .stat { padding: 18px 16px 0 0; }
+  .stat + .stat { padding-left: 16px; border-left: 1px solid var(--line); }
+  .stat b { display: block; font-family: var(--f-display); font-weight: 700; font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 0.82rem; color: var(--muted); line-height: 1.35; display: block; margin-top: 4px; }
+
+  /* hero visual */
+  .visual { position: relative; padding: 36px 0 44px; }
+  .term {
+    position: relative; z-index: 1;
+    background: var(--term-bg); color: var(--term-ink);
+    font-family: var(--f-mono); font-size: 0.8rem; line-height: 1.8;
+    border: 1px solid rgba(255,255,255,.08); border-radius: var(--r);
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .term-head { display: flex; align-items: center; gap: 7px; padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,.07); color: var(--term-dim); font-size: 0.74rem; }
+  .term-head i { width: 11px; height: 11px; border-radius: 50%; }
+  .term-head i:nth-child(1) { background: #FF6B6B; } .term-head i:nth-child(2) { background: #FFC24B; } .term-head i:nth-child(3) { background: #4FD08A; }
+  .term-head span { margin-left: auto; margin-right: auto; padding-right: 40px; }
+  .term-body { padding: 18px 22px 22px; overflow-x: auto; }
+  .term-body p { margin: 0; white-space: pre; }
+  .t-dim { color: var(--term-dim); } .t-key { color: var(--term-key); } .t-str { color: var(--term-str); } .t-ok { color: #6BDDA8; }
+  .term-body a { text-decoration: none; } .term-body a:hover .t-str { text-decoration: underline; }
+  .cursor { display: inline-block; width: 8px; height: 1.05em; vertical-align: -2px; background: var(--term-ink); animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .toast {
+    position: absolute; z-index: 2;
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px 10px 10px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--line-2); box-shadow: var(--shadow);
+    font-size: 0.82rem; line-height: 1.3; white-space: nowrap;
+    animation: float 6s ease-in-out infinite;
+  }
+  .toast .ic { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; }
+  .toast .ic svg.i { width: 18px; height: 18px; }
+  .toast small { display: block; color: var(--muted); font-size: 0.74rem; }
+  .toast strong { font-weight: 600; }
+  .toast.t1 { top: 0; right: -14px; }
+  .toast.t2 { bottom: 6px; left: -22px; animation-delay: -2s; }
+  .toast.t3 { bottom: 70px; right: -26px; animation-delay: -4s; }
+  .ic-green { background: color-mix(in srgb, #25D366 20%, transparent); color: #25D366; }
+  .ic-warm { background: color-mix(in srgb, var(--warm) 20%, transparent); color: var(--warm); }
+  .ic-blue { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
+  @keyframes float { 50% { transform: translateY(-8px); } }
+
+  /* ---------- sections ---------- */
+  section { padding-block: clamp(64px, 9vw, 112px); }
+  .sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 48px; margin-bottom: clamp(32px, 4vw, 48px); }
+  .kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+  .kicker::before { content: ""; width: 22px; height: 1px; background: currentColor; }
+  h2 { font-family: var(--f-display); font-weight: 700; font-size: clamp(2rem, 4.4vw, 3.2rem); line-height: 1.05; letter-spacing: -0.035em; margin: 0; text-wrap: balance; }
+  .sec-head > p { margin: 0; color: var(--muted); max-width: 30em; text-wrap: pretty; }
+  h3 { font-family: var(--f-display); font-weight: 600; letter-spacing: -0.02em; margin: 0; line-height: 1.2; text-wrap: balance; }
+
+  /* ---------- featured work ---------- */
+  .feature {
+    position: relative; border-radius: calc(var(--r) + 6px); padding: 1px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 60%, transparent), var(--line) 40%, var(--line) 60%, color-mix(in srgb, var(--warm) 55%, transparent));
+  }
+  .feature-in {
+    border-radius: calc(var(--r) + 5px); background: var(--card);
+    display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); gap: clamp(28px, 4vw, 56px);
+    padding: clamp(24px, 4vw, 48px);
+  }
+  .company-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; }
+  .company-tag b { color: var(--warm); font-weight: 600; }
+  .feature h3 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); line-height: 1.05; letter-spacing: -0.035em; margin: 18px 0 14px; }
+  .feature-copy > p { color: var(--muted); margin: 0 0 24px; }
+  .wins { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .wins li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.95rem; }
+  .wins li span.ck { flex: none; display: grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 7px; background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+  .wins li span.ck svg.i { width: 13px; height: 13px; stroke-width: 3; }
+
+  .surfaces { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-content: start; }
+  .surface {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 20px; border-radius: var(--r); text-decoration: none;
+    background: var(--bg-2); border: 1px solid var(--line);
+    transition: transform .25s, border-color .25s, background-color .25s;
+  }
+  a.surface:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .surface-wide { grid-column: 1 / -1; background: linear-gradient(120deg, color-mix(in srgb, var(--warm) 10%, var(--bg-2)), var(--bg-2) 60%); }
+  .surface-top { display: flex; justify-content: space-between; align-items: center; }
+  .surface .ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; }
+  .surface .arrow { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--muted); transition: background-color .25s, color .25s, transform .25s, border-color .25s; }
+  .surface .arrow svg.i { width: 15px; height: 15px; }
+  .surface:hover .arrow { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(45deg); }
+  .surface .kind { font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-top: 6px; }
+  .surface h4 { font-family: var(--f-display); font-weight: 600; font-size: 1.2rem; letter-spacing: -0.02em; margin: 0; line-height: 1.2; }
+  .surface p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
+  .surface .host { margin-top: auto; padding-top: 8px; font-family: var(--f-mono); font-size: 0.74rem; color: var(--accent); overflow-wrap: anywhere; }
+
+  .more { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .mini {
+    padding: 24px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px; transition: border-color .25s;
+  }
+  .mini:hover { border-color: var(--line-2); }
+  .mini .ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; margin-bottom: 6px; }
+  .mini h3 { font-size: 1.15rem; }
+  .mini p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 10px; }
+  .tags span { font-family: var(--f-mono); font-size: 0.7rem; padding: 3px 9px; border-radius: 6px; background: var(--card-2); color: var(--muted); border: 1px solid var(--line); }
+
+  /* ---------- stack bento ---------- */
+  .bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .cell { grid-column: span 2; padding: 24px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px; }
+  .cell.wide { grid-column: span 3; }
+  .cell-head { display: flex; align-items: center; gap: 12px; }
+  .cell-head .ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; }
+  .cell-head h3 { font-size: 1.1rem; }
+  .cell-head small { display: block; font-family: var(--f-body); font-size: 0.8rem; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  .chips li {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.875rem; font-weight: 500; color: var(--ink);
+    padding: 6px 13px 6px 11px; border-radius: 999px;
+    background: var(--card-2); border: 1px solid var(--line-2);
+  }
+  .chips li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+
+  /* ---------- experience timeline ---------- */
+  .timeline { list-style: none; margin: 0; padding: 0; position: relative; display: grid; gap: 18px; }
+  .timeline::before { content: ""; position: absolute; left: 11px; top: 12px; bottom: 12px; width: 2px; background: linear-gradient(var(--accent), var(--line) 70%); }
+  .job { position: relative; padding-left: 44px; }
+  .job::before { content: ""; position: absolute; left: 4px; top: 26px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 3px solid var(--line-2); }
+  .job.now::before { border-color: var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+  .job-card { padding: 22px 26px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr); gap: 12px 36px; }
+  .job-meta { display: flex; flex-direction: column; gap: 4px; }
+  .when { display: inline-flex; align-self: flex-start; font-family: var(--f-mono); font-size: 0.74rem; font-variant-numeric: tabular-nums; padding: 3px 10px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); color: var(--muted); margin-bottom: 8px; }
+  .job.now .when { color: var(--warm); border-color: color-mix(in srgb, var(--warm) 45%, transparent); background: color-mix(in srgb, var(--warm) 10%, transparent); }
+  .job h3 { font-size: 1.25rem; }
+  .job .org { margin: 0; color: var(--muted); font-size: 0.92rem; }
+  .job ul { margin: 0; padding-left: 1.1em; display: grid; gap: 7px; font-size: 0.94rem; }
+  .job li::marker { color: var(--accent); }
+  .job a { color: var(--accent); text-decoration: none; }
+  .job a:hover { text-decoration: underline; }
+
+  .edu { margin-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .edu > div { display: flex; gap: 14px; align-items: flex-start; padding: 22px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line); }
+  .edu .ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; flex: none; }
+  .edu h3 { font-size: 1.02rem; }
+  .edu p { margin: 2px 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+  .edu .yr { display: block; font-family: var(--f-mono); font-size: 0.72rem; color: var(--faint); margin-bottom: 4px; }
+
+  /* ---------- contact ---------- */
+  .contact-card {
+    position: relative; overflow: hidden;
+    border-radius: calc(var(--r) + 10px); padding: clamp(32px, 6vw, 72px);
+    background:
+      radial-gradient(600px 300px at 100% 0%, color-mix(in srgb, var(--warm) 22%, transparent), transparent 70%),
+      radial-gradient(700px 380px at 0% 100%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 70%),
+      var(--card);
+    border: 1px solid var(--line-2);
+    display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: center;
+  }
+  .contact-card h2 { font-size: clamp(2.2rem, 5.4vw, 4rem); }
+  .contact-card > div > p { color: var(--muted); margin: 18px 0 28px; max-width: 30em; }
+  .channels { display: grid; gap: 12px; }
+  .channel {
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; text-decoration: none;
+    background: color-mix(in srgb, var(--bg) 55%, transparent); border: 1px solid var(--line);
+    transition: border-color .2s, transform .2s;
+  }
+  a.channel:hover { border-color: var(--accent); transform: translateX(4px); }
+  .channel .ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; flex: none; }
+  .channel small { display: block; font-size: 0.75rem; color: var(--muted); }
+  .channel strong { font-weight: 600; overflow-wrap: anywhere; }
+
+  footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-block: 28px 44px; font-size: 0.85rem; color: var(--faint); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 980px) {
+    .hero, .feature-in, .contact-card { grid-template-columns: minmax(0, 1fr); }
+    .visual { max-width: 560px; }
+    .more, .edu { grid-template-columns: minmax(0, 1fr); }
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cell, .cell.wide { grid-column: span 1; }
+    .job-card { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stat:nth-child(3) { padding-left: 0; border-left: 0; }
+    .stat:nth-child(n+3) { border-top: 1px solid var(--line); margin-top: 16px; }
+  }
+  @media (max-width: 560px) {
+    .surfaces, .bento { grid-template-columns: minmax(0, 1fr); }
+    .nav .btn-sm { display: none; }
+    .term { font-size: 0.7rem; }
+    .toast.t1 { right: 0; } .toast.t2 { left: 0; } .toast.t3 { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 9h16l-1.5-5h-13zM5 9v11h14V9M9 20v-6h6v6"/></symbol>
+  <symbol id="i-dash" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5 15c-1.5 1.5-2 5-2 5s3.5-.5 5-2M9 13l2 2M14.5 4.5C17 2 21 3 21 3s1 4-1.5 6.5L13 16l-5-5z"/><circle cx="15.5" cy="8.5" r="1.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 19.5 5.3 16A8 8 0 1 1 8 18.7z"/><path d="M9 11h6M9 14h3"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.5 6h11v10h-11zM13.5 10h4l3 3v3h-7"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15zM5 19l7-7"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 11 12 4l8.5 7M6 9.5V20h12V9.5M10 20v-5h4v5"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9.5 12 5l10 4.5L12 14zM6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5h6a2 2 0 0 1 2 2V20a2 2 0 0 0-2-2H4zM20 4.5h-6a2 2 0 0 0-2 2V20a2 2 0 0 1 2-2h6z"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-2.5 5 2.5-1.5-7"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M5 3.5h3.5l1.5 4-2.2 1.4a11 11 0 0 0 5.3 5.3l1.4-2.2 4 1.5V17a2.5 2.5 0 0 1-2.5 2.5A15.5 15.5 0 0 1 2.5 6 2.5 2.5 0 0 1 5 3.5z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="nav">
+    <a class="logo" href="#top"><b>A</b>Afreen</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#stack">Stack</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch colour theme">
+        <svg class="i moon"><use href="#i-moon"/></svg>
+        <svg class="i sun"><use href="#i-sun"/></svg>
+      </button>
+      <a class="btn btn-primary btn-sm" href="#contact">Hire me</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <div class="hero">
+      <div>
+        <span class="badge"><span class="dot"></span>Available for Laravel roles · Delhi, India</span>
+        <h1>I build Laravel platforms that <span class="hl">run whole businesses.</span></h1>
+        <p class="hero-sub">I'm Afreen, a <strong>PHP / Laravel developer</strong> with 3+ years in production. I build connected systems: a customer marketplace, a vendor business platform, and an AI agents server that books services over WhatsApp. I take features from database design to deployment.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#work">View my work <svg class="i"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost" href="mailto:imafreenansari1998@gmail.com"><svg class="i"><use href="#i-mail"/></svg>Email me</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>3+</b><span>years building for the web</span></div>
+          <div class="stat"><b>3</b><span>connected systems in production</span></div>
+          <div class="stat"><b>5</b><span>payment gateways integrated</span></div>
+          <div class="stat"><b>4</b><span>roles since 2020</span></div>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="term" role="img" aria-label="Architecture of three systems: My Chitti (website, Android user app, staff and admin panels), MC Vendor Hub (vendor panel), and a separate AI agents server for vendor chat and WhatsApp service booking, with Redis, RAG search, WhatsApp, FCM and SMS.">
+          <div class="term-head"><i></i><i></i><i></i><span>~/mychitti</span></div>
+          <div class="term-body">
+<p><span class="t-dim">$</span> cat architecture.txt</p>
+<p> </p>
+<p><span class="t-key">mychitti</span>          <a href="https://mychitti.net/" target="_blank" rel="noopener"><span class="t-str">mychitti.net</span></a></p>
+<p><span class="t-dim"> ├─</span> user-app       <a href="https://play.google.com/store/apps/details?id=com.mychittiappuser" target="_blank" rel="noopener"><span class="t-str">Google Play</span></a></p>
+<p><span class="t-dim"> ├─</span> staff-panel    <span class="t-dim">internal</span></p>
+<p><span class="t-dim"> └─</span> admin-panel    <span class="t-dim">internal</span></p>
+<p><span class="t-key">vendorhub</span>         <a href="https://mcvendorhub.com/" target="_blank" rel="noopener"><span class="t-str">mcvendorhub.com</span></a></p>
+<p><span class="t-dim"> └─</span> vendor-panel   <a href="https://vendor.mcvendorhub.com/login" target="_blank" rel="noopener"><span class="t-str">vendor.mcvendorhub.com</span></a></p>
+<p><span class="t-key">ai-agents</span>         <span class="t-dim">separate server</span></p>
+<p><span class="t-dim"> ├─</span> vendor chat</p>
+<p><span class="t-dim"> └─</span> WhatsApp service booking</p>
+<p> </p>
+<p><span class="t-dim">cache </span><span class="t-ok">redis</span><span class="t-dim">  search </span><span class="t-ok">vector+RAG</span></p>
+<p><span class="t-dim">notify </span><span class="t-ok">WABA · FCM · SMS</span></p>
+<p> </p>
+<p><span class="t-ok">✓</span> 3 systems · <span class="t-dim">deployed via CI/CD</span></p>
+<p><span class="t-dim">$</span> <span class="cursor"></span></p>
+          </div>
+        </div>
+
+        <div class="toast t1" aria-hidden="true">
+          <span class="ic ic-green"><svg class="i"><use href="#i-chat"/></svg></span>
+          <span><strong>AI agent booked a service</strong><small>via WhatsApp chat</small></span>
+        </div>
+        <div class="toast t3" aria-hidden="true">
+          <span class="ic ic-blue"><svg class="i"><use href="#i-bell"/></svg></span>
+          <span><strong>FCM push delivered</strong><small>user app · new lead</small></span>
+        </div>
+        <div class="toast t2" aria-hidden="true">
+          <span class="ic ic-warm"><svg class="i"><use href="#i-card"/></svg></span>
+          <span><strong>Payment captured</strong><small>Razorpay · webhook verified</small></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORK -->
+    <section id="work" aria-labelledby="work-title">
+      <div class="sec-head">
+        <div>
+          <p class="kicker">Selected work</p>
+          <h2 id="work-title">Three systems, one ecosystem</h2>
+        </div>
+        <p>My current work spans three separate codebases: a local marketplace for customers, a business platform for vendors, and an AI agents server that connects them.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-in">
+          <div class="feature-copy">
+            <span class="company-tag"><b>●</b> Mychitti Technologies · 2025 – present</span>
+            <h3>My Chitti &amp; MC Vendor Hub</h3>
+            <p>My Chitti helps customers find local shops, services and technicians. MC Vendor Hub is a separate platform where vendors run billing, POS, CRM and WhatsApp. A dedicated AI agents server handles vendor chat and lets customers book services on WhatsApp. I work across all three.</p>
+            <ul class="wins">
+              <li><span class="ck"><svg class="i"><use href="#i-check"/></svg></span>AI agents on a separate server that handle vendor chat and service booking on WhatsApp</li>
+              <li><span class="ck"><svg class="i"><use href="#i-check"/></svg></span>Redis caching that cut processing time on high-volume lead workflows</li>
+              <li><span class="ck"><svg class="i"><use href="#i-check"/></svg></span>Vector database with RAG-based search for smarter data retrieval</li>
+              <li><span class="ck"><svg class="i"><use href="#i-check"/></svg></span>A separate Meta WhatsApp Business API setup for each vendor</li>
+              <li><span class="ck"><svg class="i"><use href="#i-check"/></svg></span>FCM push notifications and SMS gateway alerts for users and vendors</li>
+              <li><span class="ck"><svg class="i"><use href="#i-check"/></svg></span>Payment gateway integrations for secure transactions</li>
+              <li><span class="ck"><svg class="i"><use href="#i-check"/></svg></span>Server integrations and CI/CD pipelines across environments</li>
+            </ul>
+          </div>
+
+          <div class="surfaces">
+            <a class="surface" href="https://mychitti.net/" target="_blank" rel="noopener">
+              <div class="surface-top">
+                <span class="ic ic-blue"><svg class="i"><use href="#i-globe"/></svg></span>
+                <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg></span>
+              </div>
+              <span class="kind">Public website</span>
+              <h4>My Chitti</h4>
+              <p>Local marketplace to discover shops, book services, reach verified vendors and get digital bills.</p>
+              <span class="host">mychitti.net</span>
+            </a>
+            <a class="surface" href="https://mcvendorhub.com/" target="_blank" rel="noopener">
+              <div class="surface-top">
+                <span class="ic ic-warm"><svg class="i"><use href="#i-store"/></svg></span>
+                <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg></span>
+              </div>
+              <span class="kind">Business platform</span>
+              <h4>MC Vendor Hub</h4>
+              <p>Billing, POS, CRM, WhatsApp and 24×7 AI employees for Indian MSMEs.</p>
+              <span class="host">mcvendorhub.com</span>
+            </a>
+            <a class="surface" href="https://vendor.mcvendorhub.com/login" target="_blank" rel="noopener">
+              <div class="surface-top">
+                <span class="ic ic-blue"><svg class="i"><use href="#i-dash"/></svg></span>
+                <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg></span>
+              </div>
+              <span class="kind">Vendor panel</span>
+              <h4>Vendor Dashboard</h4>
+              <p>Where vendors handle leads, billing and their own WhatsApp messaging.</p>
+              <span class="host">vendor.mcvendorhub.com</span>
+            </a>
+            <a class="surface" href="https://play.google.com/store/apps/details?id=com.mychittiappuser&amp;pcampaignid=web_share" target="_blank" rel="noopener">
+              <div class="surface-top">
+                <span class="ic ic-green"><svg class="i"><use href="#i-phone"/></svg></span>
+                <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg></span>
+              </div>
+              <span class="kind">Android · Google Play</span>
+              <h4>My Chitti App</h4>
+              <p>Free app to find trusted local vendors and track services live, running on the platform's APIs.</p>
+              <span class="host">Get it on Google Play</span>
+            </a>
+            <div class="surface surface-wide">
+              <div class="surface-top">
+                <span class="ic ic-warm"><svg class="i"><use href="#i-spark"/></svg></span>
+                <span class="kind" style="margin-top:0">Separate server · internal</span>
+              </div>
+              <h4>AI Agents Server</h4>
+              <p>AI agents that chat with customers for vendors and book services end to end over WhatsApp, connected to My Chitti and MC Vendor Hub.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="more">
+        <article class="mini">
+          <span class="ic ic-green"><svg class="i"><use href="#i-leaf"/></svg></span>
+          <h3>SwafeWellness</h3>
+          <p>A wellness website I built on my own, from database design to launch.</p>
+          <div class="tags"><span>CodeIgniter 4</span><span>MySQL</span><span>AJAX</span></div>
+        </article>
+        <article class="mini">
+          <span class="ic ic-warm"><svg class="i"><use href="#i-truck"/></svg></span>
+          <h3>Logistics Management System</h3>
+          <p>Operations software for Suryavanshi Group of Business, built with a team.</p>
+          <div class="tags"><span>CodeIgniter 4</span><span>MySQL</span></div>
+        </article>
+        <article class="mini">
+          <span class="ic ic-blue"><svg class="i"><use href="#i-home"/></svg></span>
+          <h3>MBC Realty</h3>
+          <p>Real-estate website with dynamic listings, built with a team.</p>
+          <div class="tags"><span>CodeIgniter 3</span><span>MySQL</span><span>AJAX</span></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" aria-labelledby="stack-title">
+      <div class="sec-head">
+        <div>
+          <p class="kicker">Tech stack</p>
+          <h2 id="stack-title">What I build with</h2>
+        </div>
+        <p>My core is PHP and Laravel. Around it are the pieces a production platform needs: caching, search, messaging, payments and deployment.</p>
+      </div>
+
+      <div class="bento">
+        <div class="cell wide">
+          <div class="cell-head"><span class="ic ic-blue"><svg class="i"><use href="#i-code"/></svg></span><h3>Languages &amp; frameworks<small>The core of every build</small></h3></div>
+          <ul class="chips"><li class="hi">PHP</li><li class="hi">Laravel</li><li>CodeIgniter 3 &amp; 4</li><li>JavaScript</li><li>jQuery</li><li>AJAX</li><li>HTML</li><li>CSS</li><li>Bootstrap</li></ul>
+        </div>
+        <div class="cell wide">
+          <div class="cell-head"><span class="ic ic-green"><svg class="i"><use href="#i-chat"/></svg></span><h3>Messaging &amp; notifications<small>Reach users on every channel</small></h3></div>
+          <ul class="chips"><li class="hi">Meta WhatsApp Business API</li><li class="hi">FCM push notifications</li><li class="hi">SMS gateway</li></ul>
+        </div>
+        <div class="cell">
+          <div class="cell-head"><span class="ic ic-warm"><svg class="i"><use href="#i-db"/></svg></span><h3>Data &amp; caching<small>Fast at high volume</small></h3></div>
+          <ul class="chips"><li>MySQL</li><li class="hi">Redis</li><li>Vector databases</li></ul>
+        </div>
+        <div class="cell">
+          <div class="cell-head"><span class="ic ic-blue"><svg class="i"><use href="#i-spark"/></svg></span><h3>AI &amp; search<small>Retrieval that understands</small></h3></div>
+          <ul class="chips"><li class="hi">AI agents</li><li class="hi">RAG</li><li>Vector search</li></ul>
+        </div>
+        <div class="cell">
+          <div class="cell-head"><span class="ic ic-green"><svg class="i"><use href="#i-rocket"/></svg></span><h3>DevOps &amp; tools<small>Ship with confidence</small></h3></div>
+          <ul class="chips"><li>CI/CD</li><li>Server deployment</li><li>Git &amp; GitHub</li><li>REST APIs</li></ul>
+        </div>
+        <div class="cell wide" style="grid-column: 1 / -1">
+          <div class="cell-head"><span class="ic ic-warm"><svg class="i"><use href="#i-card"/></svg></span><h3>Payment gateways<small>Secure checkout across Indian and global providers</small></h3></div>
+          <ul class="chips"><li>Stripe</li><li>Razorpay</li><li>CCAvenue</li><li>PhonePe</li><li>Paytm</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" aria-labelledby="exp-title">
+      <div class="sec-head">
+        <div>
+          <p class="kicker">Experience</p>
+          <h2 id="exp-title">From client websites to production platforms</h2>
+        </div>
+        <p>I started with PHP sites for clients, moved to CodeIgniter systems, and now build full Laravel platforms.</p>
+      </div>
+
+      <ol class="timeline">
+        <li class="job now">
+          <div class="job-card">
+            <div class="job-meta"><span class="when">2025 – Present</span><h3>PHP Developer</h3><p class="org">Mychitti Technologies Pvt Ltd</p></div>
+            <ul>
+              <li>Work across three separate systems: My Chitti (website, user app, staff and admin panels), MC Vendor Hub (vendor panel) and the AI agents server.</li>
+              <li>Built AI agents for vendor chat and for booking services over WhatsApp.</li>
+              <li>Added Redis caching for leads, vector search with RAG, per-vendor WhatsApp Business API, FCM push, SMS gateway and payment gateways.</li>
+              <li>Own server integrations, CI/CD pipelines and deployments across environments.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="job">
+          <div class="job-card">
+            <div class="job-meta"><span class="when">2024 – 2025</span><h3>PHP Developer</h3><p class="org">Bigwelt Infotech Pvt Ltd</p></div>
+            <ul>
+              <li>Built and maintained backend features in PHP and Laravel for client web applications.</li>
+              <li>Wrote and optimised MySQL queries; added dynamic client-side features in JavaScript.</li>
+              <li>Used GitHub for version control and code reviews.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="job">
+          <div class="job-card">
+            <div class="job-meta"><span class="when">2022 – 2024</span><h3>PHP Developer</h3><p class="org">Maisha Infotech Pvt Ltd</p></div>
+            <ul>
+              <li>Developed dynamic web applications with PHP, CodeIgniter, JavaScript and AJAX.</li>
+              <li>Built swafewellness.com on my own with CodeIgniter 4.</li>
+              <li>Worked in teams on a logistics system for Suryavanshi Group of Business and on mbcrealty.com.</li>            </ul>
+          </div>
+        </li>
+        <li class="job">
+          <div class="job-card">
+            <div class="job-meta"><span class="when">2020 – 2022</span><h3>Full Stack Developer</h3><p class="org">Freelance</p></div>
+            <ul>
+              <li>Built custom web applications for multiple clients, including an Activity, Quiz &amp; Lessons app.</li>
+              <li>Joined an Event Management System mid-project and added modules to an existing blog platform.</li>            </ul>
+          </div>
+        </li>
+      </ol>
+
+      <div class="edu">
+        <div><span class="ic ic-blue"><svg class="i"><use href="#i-cap"/></svg></span><div><span class="yr">September 2025</span><h3>Master of Computer Applications</h3><p>IGNOU, Indira Gandhi National Open University</p></div></div>
+        <div><span class="ic ic-warm"><svg class="i"><use href="#i-book"/></svg></span><div><span class="yr">2015 – 2019</span><h3>Bachelor of Arts, English</h3><p>Undergraduate degree</p></div></div>      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="contact-card">
+        <div>
+          <p class="kicker">Contact</p>
+          <h2 id="contact-title">Let's build something that ships.</h2>
+          <p>I'm open to full-time PHP / Laravel roles. Email or call me and I'll reply within a day.</p>
+          <a class="btn btn-primary" href="mailto:imafreenansari1998@gmail.com">Start a conversation <svg class="i"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="channels">
+          <a class="channel" href="mailto:imafreenansari1998@gmail.com">
+            <span class="ic ic-blue"><svg class="i"><use href="#i-mail"/></svg></span>
+            <span><small>Email</small><strong>imafreenansari1998@gmail.com</strong></span>
+          </a>
+          <a class="channel" href="tel:+919654737358">
+            <span class="ic ic-green"><svg class="i"><use href="#i-call"/></svg></span>
+            <span><small>Phone</small><strong>+91 96547 37358</strong></span>
+          </a>
+          <div class="channel">
+            <span class="ic ic-warm"><svg class="i"><use href="#i-pin"/></svg></span>
+            <span><small>Location</small><strong>Delhi, India</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Afreen · PHP / Laravel Developer</span>
+    <a href="#top" style="text-decoration:none">Back to top ↑</a>
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    try {
+      var saved = localStorage.getItem('afreen-theme');
+      if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+    } catch (e) {}
+    function current() {
+      var t = root.getAttribute('data-theme');
+      if (t === 'light' || t === 'dark') return t;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('afreen-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
